@@ -655,14 +655,14 @@
 											</div>
 										</li>
 										<li class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true">
-											<a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
+											<!-- <a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
 												<span class="m-nav__link-badge m-badge m-badge--accent">
 													3
 												</span>
 												<span class="m-nav__link-icon">
 													<i class="flaticon-alert-2"></i>
 												</span>
-											</a>
+											</a> -->
 											<div class="m-dropdown__wrapper">
 												<span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
 												<div class="m-dropdown__inner">
@@ -1048,7 +1048,7 @@
 		>
 						<ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
 							<li class="m-menu__item  m-menu__item--active" aria-haspopup="true" >
-								<a  href="index.html" class="m-menu__link ">
+								<a  href="{{route('dashboard')}}" class="m-menu__link ">
 									<span class="m-menu__item-here"></span>
 									<i class="m-menu__link-icon flaticon-line-graph"></i>
 									<span class="m-menu__link-text">

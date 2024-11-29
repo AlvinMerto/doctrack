@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'MinDA - Document Tracking System') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -28,6 +28,7 @@
 		<!--end::Page Vendors -->
 		<link href="{{asset('vendors')}}/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
 		<link href="{{asset('demo')}}/demo3/base/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link href="{{asset('app')}}/style/doctrack_style.css" rel="stylesheet" type="text/css" />
 		<!--end::Base Styles -->
 		<link rel="shortcut icon" href="{{asset('demo')}}/demo3/media/img/logo/favicon.ico" />
 
@@ -60,6 +61,10 @@
 
         </div>
 
+        <script>
+		  	var url = "<?php echo url(""); ?>";
+		</script>
+
         <script src="{{asset('vendors')}}/base/vendors.bundle.js" type="text/javascript"></script>
 		<script src="{{asset('demo')}}/demo3/base/scripts.bundle.js" type="text/javascript"></script>
 		<!--end::Base Scripts -->   
@@ -68,5 +73,8 @@
 		<!--end::Page Vendors -->  
         <!--begin::Page Snippets -->
 		<script src="{{asset('app')}}/js/dashboard.js" type="text/javascript"></script>
+        <script src="{{asset('app')}}/js/dashboard_procs.js" type="text/javascript"></script>
+        <script src="{{asset('app')}}/js/events_doctrack.js" type="text/javascript"></script>
+
     </body>
 </html>
