@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('internal_docs', function (Blueprint $table) {
-            $table->increments("internalid");
-            $table->integer("office");
-            $table->integer("division");
-            $table->integer("from");
-            $table->integer("to")->nullable();
-            $table->string("actionneeded")->nullable();
+        Schema::create('foot_prints', function (Blueprint $table) {
+            $table->increments("footprintid");
+            $table->enum("typeofdocument",["internal","external","ongoing"]);
             $table->integer("documentid");
-            $table->string("remarks")->nullable();
+            $table->integer("touserid");
+            $table->integer("fromuserid");
             $table->integer("status")->nullable();
             $table->timestamps();
         });
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('internal_docs');
+        Schema::dropIfExists('foot_prints');
     }
 };

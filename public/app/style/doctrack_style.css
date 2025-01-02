@@ -23,7 +23,7 @@
     width:50%;
     height:auto;
     max-height:98%;
-    overflow-y:scroll;
+    overflow-y:auto;
     padding: 25px;
     background:#fff;
     box-shadow: 0px 0px 100px #a4a4a4;
@@ -31,5 +31,117 @@
 }
 
 .close_window {
-    cursor:pointer;
+    cursor: pointer;
+    font-weight: bold !important;
+    font-size: 15px !important;
+    color: #000 !important;
+    /* background: #ececec69 !important; */
+    margin-top: 5px !important;
+}
+
+.close_window:hover {
+    color:red !important;
+}
+
+.strong_this {
+    font-weight: bold;
+}
+
+#recipients li:hover {
+    cursor: pointer;
+    font-weight: bold;
+    color:red;
+}
+
+.searchbox_div {
+    border: 1px solid #e9e6e6 !important;
+    padding: 14px !important;
+    border-radius: 7px !important;
+    width: 100% !important;
+}
+
+.width_it {
+    width:65% !important;
+
+    transition: width 3s;
+}
+
+.font-13-it {
+    font-size: 15px !important;
+}
+
+.font-13-it_ {
+    font-size:13px !important;
+}
+
+.font-18-it {
+    font-size:18px !important;
+}
+
+#external_entry, #outgoing_div {
+    display:none;
+}
+
+.ring-gray-300 {
+    padding: 15px 8px !important;
+}
+
+#theexternallink_needsaction {
+   
+}
+
+.mini-navigation {
+
+}
+
+.mini-navigation li {
+   display: inline-block;
+  border-right: 1px solid #eee;
+  padding: 8px 10px;
+  /* border-left: 1px solid #eee; */
+  margin-right: -4px;
+ 
+}
+
+.mini-navigation li, 
+.mini-navigation li a, 
+.mini-navigation li a i, 
+.mini-navigation li i {
+    font-size: 14px !important;
+}
+
+.mini-navigation li:last-child {
+    border:none;
+}
+
+.mini-navigation li:hover, .mini-navigation li label:hover{
+    cursor: pointer;
+}
+
+#uploadingtext {
+    display:none;
+    color: red;
+    font-size: 13px;
+    margin-left: 8px;
+}
+
+#signthis_document {
+    border-radius: 99px;
+    background: #b0f092;
+    padding: 4px 15px;
+    margin-left: 10px;
+}
+
+.updatediv {
+    display: none;
+    position: absolute;
+    background: #ffffff;
+    padding: 10px;
+    width: 250%;
+    box-shadow: 0px 3px 4px #c3b2b2;
+    margin-top: 14px;
+    margin-left: -10px;
+    border-radius: 8px;
+    border: 1px solid #ebe4e4;
+    z-index: 100000000;
 }

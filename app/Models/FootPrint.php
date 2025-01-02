@@ -10,19 +10,28 @@ use App\Models\TheDivision;
 use App\Models\User;
 use App\Models\RemarksTable;
 use App\Models\FileController;
-use App\Models\FootPrint;
+use App\Models\ExternalDocs;
+use App\Models\InternalDocs;
 
-class InternalDocs extends Model
+class FootPrint extends Model
 {
     //
-    protected $table    = "internal_docs";
-    protected $id       = "internalid";
-    protected $fillable = [
-        "office","division","from","to","actionneeded","documentid","remarks","status","created_at","updated_at"
+    protected $table        = "foot_prints";
+    protected $id           = "footprintid";
+    protected $fillable     = [
+        "typeofdocument","documentid","touserid","fromuserid","status","created_at","updated_at"
     ];
 
     function getdocs() {
-        return $this->hasOne(TheDocument::class, 'documentid', 'documentid');
+        return $this->belongsTo(TheDocument::class,"documentid","documentid");
+    }
+
+    function getExternal() {
+        return $this->hasOne(ExternalDocs::class,"document_id","documentid");
+    }
+
+    function getInternal() {
+        return $this->belongsTo(InternalDocs::class,"documentid","documentid");
     }
 
     function getDiv() {
@@ -34,11 +43,11 @@ class InternalDocs extends Model
     }
 
     function getuser_to() {
-        return $this->hasOne(User::class,"id","to");
+        return $this->hasOne(User::class,"id","touserid");
     }
 
     function getuser_from() {
-        return $this->hasOne(User::class,"id","from");
+        return $this->hasOne(User::class,"id","fromuserid");
     }
 
     function get_remarks() {

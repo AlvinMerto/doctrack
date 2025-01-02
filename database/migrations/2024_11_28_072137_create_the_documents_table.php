@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("briefernumber");
             $table->string("barcodenumber");
             $table->string("documentcat");
+            $table->enum("docmgt",["internal","external","outgoing"]);
             $table->string("subject");
             $table->enum("priority",["confidential","high","moderate","low"]);
             $table->timestamps();

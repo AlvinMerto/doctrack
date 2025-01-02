@@ -1,25 +1,53 @@
-<x-app-layout>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'MinDA') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!--begin::Web font -->
+		<script src="https://cdn.bootcss.com/webfont/1.6.16/webfontloader.js"></script>
+		<script>
+            WebFont.load({
+                google: {"families":["Montserrat:300,400,500,600,700","Roboto:300,400,500,600,700"]},
+                active: function() {
+                    sessionStorage.fonts = true;
+                }
+            });
+		</script>
+		<!--end::Web font -->
+        <!--begin::Base Styles -->  
+        <!--begin::Page Vendors -->
+		<link href="{{asset('vendors')}}/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+		<!--end::Page Vendors -->
+		<link href="{{asset('vendors')}}/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+		<link href="{{asset('demo')}}/demo3/base/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link href="{{asset('app')}}/style/doctrack_style.css" rel="stylesheet" type="text/css" />
+		<!--end::Base Styles -->
+		<link rel="shortcut icon" href="{{asset('demo')}}/demo3/media/img/logo/favicon.ico" />
+        <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"/>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+
+<body class="font-sans antialiased">
     @if(Session::has('message'))
-        <?php echo Session::get('message'); ?>
+        <?php echo Session::get('message') ?>
     @endif
-    <div class="m-grid__item m-grid__item--fluid m-wrapper ">
-        <div class="m-subheader ">
+    <div class="m-grid__item m-grid__item--fluid m-wrapper " style="margin: 0px 65px;">
+        <div class="m-subheader pl-0">
 		    <div class="d-flex align-items-center">
 				<div class="mr-auto">
 					<h3 class="m-subheader__title ">
 			    		Data Entry
 					</h3>
 				</div>
-				<!-- <div>
-					<a href="{{route('entrycontro.entry')}}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
-						<span>
-							<i class="la la-plus"></i>
-                            <span>
-                                Start Tracking
-                            </span>
-		    			</span>
-					</a>
-				</div> -->
 			</div>
 		</div>
         <div class="m-content">
@@ -45,11 +73,7 @@
                                                 <label for="typeofdoc" class="block text-sm/6 font-medium text-gray-900">Type of Document</label>
                                                     <div class="mt-2">
                                                         <select name="typeofdoc" id="typeofdoc" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
-                                                            <option value="internal"> Internal </option>
-                                                            <?php if ($isrecords) {?>
-                                                                <option value="external"> External </option>
-                                                                <option value="outgoing"> Outgoing </option>
-                                                            <?php } ?>
+                                                            <option value="internal"> External </option>
                                                         </select>
                                                     </div>
                                             </div>
@@ -62,15 +86,15 @@
                                     <div class="sm:col-span-3 mt-3">
                                         <label for="briefer-number" class="block text-sm/6 font-medium text-gray-900">Briefer Number</label>
                                         <div class="mt-2">
-                                            <input type="text" value='<?php echo $brnum; ?>' id="briefer-number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" disabled='disabled'>
-                                            <input type='hidden' value='<?php echo $brnum; ?>' name="briefer-number" />
+                                            <input type="text" value="<?php echo $brnum; ?>" name="briefer-number" id="briefer-number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" disabled='disabled'>
+                                    
                                     </div>
 
                                     <div class="sm:col-span-3 mt-3">
                                         <label for="barcode-number" class="block text-sm/6 font-medium text-gray-900">Barcode Number</label>
                                         <div class="mt-2">
-                                            <input type="text" value='<?php echo $bcnum; ?>'  id="barcode-number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" disabled='disabled'>
-                                            <input type='hidden' value='<?php echo $bcnum; ?>' name="barcode-number" />
+                                            <input type="text" value="<?php echo $bcnum; ?>" name="barcode-number" id="barcode-number" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" disabled='disabled'>
+                                
                                     </div>
 
                                     <div class="col-span-full mt-3">
@@ -217,10 +241,10 @@
                         <label for="priority_lvl" class="block text-sm/6 font-medium text-gray-900">Priority Level</label>
                             <select name='priority_lvl' class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
                                 <option value="high"> High Priority </option>
-                                <option value="moderate"> Moderate Priority </option>
-                                <option value="low"> Low Priority </option>
+                                <option value="high"> Medium Priority </option>
+                                <option value="high"> Low Priority </option>
                                 <optgroup>
-                                    <option value="confidential"> Confidential </option>
+                                    <option value="confi"> Confidential </option>
                                 </optgroup>
                             </select>
                     </div>
@@ -253,4 +277,6 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+
+</body>
+</html>

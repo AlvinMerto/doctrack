@@ -1,16 +1,11 @@
 <x-app-layout>
-    <div id='dialog_window'>
-        <span id="display_here"></span>
-    </div>
-    <input type='hidden' id='accttype' value='<?php echo $accttype; ?>'/>
-    <input type="hidden" id="loa" value='<?php echo $levelofaccess; ?>'/>
     <div class="m-grid__item m-grid__item--fluid m-wrapper">
 					<!-- BEGIN: Subheader -->
 					<div class="m-subheader ">
 						<div class="d-flex align-items-center">
 							<div>
 								<h3 class="m-subheader__title ">
-									Dashboard  
+									Completed Documents  
 								</h3>
 							</div>
                                     <div class="mr-auto">
@@ -24,97 +19,12 @@
                                             </a>
                                         </span>
                                     </div>
-							<div>
-								<a href="{{route('entrycontro.entry')}}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">
-									<span>
-										<i class="la la-plus"></i>
-                                        <span>
-                                            Start Tracking
-                                        </span>
-									</span>
-								</a>
-							</div>
 						</div>
 					</div>
 					<!-- END: Subheader -->
 					<div class="m-content">
 						<div class="row">
-							<div class="col-xl-3">
-								<div class="row m-row--full-height__">
-                                    <div class="col-sm-5 col-md-5 col-lg-5">
-										<div class="m-portlet m-portlet--border-bottom-brand m-portlet--border-bottom-success">
-											<div class="m-portlet__body">
-												<div class="m-widget26">
-													<div class="m-widget26__number">
-													    <?php echo $internal; ?>
-														<small>
-															Incoming Internal
-														</small>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                    <div class="col-sm-5 col-md-5 col-lg-5">
-										<div class="m-portlet m-portlet--border-bottom-brand m-portlet--border-bottom-success">
-											<div class="m-portlet__body">
-												<div class="m-widget26">
-													<div class="m-widget26__number">
-														<?php echo $external; ?>
-														<small>
-															Incoming External
-														</small>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                    <div class="col-sm-5 col-md-5 col-lg-5">
-										<div class="m-portlet m-portlet--border-bottom-brand m-portlet--border-bottom-success">
-											<div class="m-portlet__body">
-												<div class="m-widget26">
-													<div class="m-widget26__number">
-														<?php echo $needsaction; ?>
-														<small>
-                                                            Unrouted Documents
-															<!-- Needs Action -->
-														</small>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                    <div class="col-sm-5 col-md-5 col-lg-5">
-										<div class="m-portlet m-portlet--border-bottom-brand m-portlet--border-bottom-danger">
-											<div class="m-portlet__body">
-												<div class="m-widget26">
-													<div class="m-widget26__number">
-														<?php echo $overdue; ?>
-														<small>
-															Overdue Documents
-														</small>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-                                    <!-- <div class="col-sm-4 col-md-4 col-lg-4">
-										<div class="m-portlet">
-											<div class="m-portlet__body">
-												<div class="m-widget26">
-													<div class="m-widget26__number">
-														570
-														<small>
-															Confidential
-														</small>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div> -->
-                                </div>
-							</div>
-                            <div class="col-xl-9">
+                            <div class="col-xl-12">
                                 <div class="row m-row--full-height">
 									<div class="col-sm-12 col-md-12 col-lg-12">
                                       <div class="col-xl-12">
@@ -131,26 +41,8 @@
                                                 <div class="m-portlet__head-tools">
                                                     <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
                                                         <li class="nav-item m-tabs__item">
-                                                            <a class='nav-link m-tabs__link active tab_link tab_link_big' data-accttype='<?php echo $accttype; ?>' data-toggle="tab" data-action="incomming" data-status='1'>
-                                                                Incoming
-                                                            </a>
-                                                        </li>
-                                                        
-                                                        <!-- <li class="nav-item m-tabs__item">
-                                                            <a class='nav-link m-tabs__link tab_link tab_link_big' data-accttype='<?php // echo $accttype; ?>' data-toggle="tab" data-action="needsaction" data-status='none'>
-                                                                Unrouted
-                                                            </a>
-                                                        </li> -->
-
-                                                        <!-- <li class="nav-item m-tabs__item">
-                                                            <a class=' nav-link m-tabs__link tab_link tab_link_big' data-accttype='<?php // echo $accttype; ?>' data-toggle="tab" data-action="overdue" data-status='1'>
-                                                                Overdue
-                                                            </a>
-                                                        </li> -->
-
-                                                        <li class="nav-item m-tabs__item">
-                                                            <a class=' nav-link m-tabs__link tab_link tab_link_big' data-accttype='<?php echo $accttype; ?>' data-toggle="tab" data-action="inprocess" data-status='1'>
-                                                                On-Progress
+                                                            <a class='nav-link m-tabs__link active tab_link tab_link_big'  data-toggle="tab" data-action="incomming" data-status='1'>
+                                                                Documents
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -168,11 +60,11 @@
                                                                     </a>
                                                                 </li>
 
-                                                                    <li class="nav-item m-tabs__item" id="theexternallink_needsaction">
-                                                                        <a class="nav-link m-tabs__link small_link_click" data-action="external" data-status='2' data-toggle="tab" href="#m_widget11_tab2_content" role="tab">
-                                                                            External
-                                                                        </a>
-                                                                    </li>
+                                                                <li class="nav-item m-tabs__item" id="theexternallink_needsaction">
+                                                                    <a class="nav-link m-tabs__link small_link_click" data-action="external" data-status='2' data-toggle="tab" href="#m_widget11_tab2_content" role="tab">
+                                                                        External
+                                                                    </a>
+                                                                </li>
 
                                                                 <!-- <li class="nav-item m-tabs__item">
                                                                     <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_widget11_tab2_content" role="tab">
@@ -190,9 +82,9 @@
                                                                     <!--begin::Thead-->
                                                                     <thead>
                                                                         <tr>
-                                                                            <!-- <td class="m-widget11__label">
+                                                                            <td class="m-widget11__label">
                                                                                 #
-                                                                            </td> -->
+                                                                            </td>
                                                                             <td class="m-widget11__app">
                                                                                 Document
                                                                             </td>
@@ -237,5 +129,5 @@
                             </div>
                         </div>
                     </div>
-							
+	
 </x-app-layout>

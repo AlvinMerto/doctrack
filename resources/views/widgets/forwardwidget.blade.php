@@ -1,6 +1,13 @@
-<div class='inside_window p-25'>
+<div class=''>
+    <div class="m-portlet__head-caption">
+											<div class="m-portlet__head-title">
+												<h3 class="m-portlet__head-text" style="font-size: 15px;margin-top: 12px;border-bottom: 1px solid #f1f1f1;padding-bottom: 12px;font-weight: bold;">
+													Forward this document
+												</h3>
+											</div>
+										</div>
     <div class="m-portlet m-portlet--full-height ">
-									<div class="m-portlet__head">
+									<!-- <div class="m-portlet__head">
 										<div class="m-portlet__head-caption">
 											<div class="m-portlet__head-title">
 												<h3 class="m-portlet__head-text">
@@ -8,7 +15,7 @@
 												</h3>
 											</div>
 										</div>
-									</div>
+									</div> -->
 									<div class="m-portlet__body">
 										<div class="m-widget12">
 											<div class="m-widget12__item">
@@ -16,10 +23,27 @@
 													Office / Division
 													<br>
 													<span>
-														<select id="country" name="country" autocomplete="country-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                                                            <option>United States</option>
-                                                            <option>Canada</option>
-                                                            <option>Mexico</option>
+														<select id="offices" name="offices" autocomplete="offices-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                                                                <optgroup label = "Offices">
+                                                                    <?php 
+                                                                        foreach($office as $off) {
+                                                                            echo "<option value='{$off->officeid}_{$off->offtype}'>{$off->officename}</option>";
+                                                                        }
+                                                                    ?>
+                                                                </optgroup>
+                                                                <?php if ($acct_type == "4") { ?>
+                                                                    <optgroup label = "Divisions">
+                                                                        <?php
+                                                                            foreach($thedivision as $div) {
+                                                                                echo "<option value='{$div->divisionid}_{$div->divtype}'>{$div->divisionname}</option>";
+                                                                            }
+                                                                        ?>
+                                                                    </optgroup>
+                                                                <?php } ?>
+
+                                                                <!-- <optgroup label="All Employees">
+                                                                    <option value=''> </option>
+                                                                </optgroup> -->
                                                         </select>
 													</span>
 												</span>
@@ -27,10 +51,13 @@
 													Name of Personnel
 													<br>
 													<span>
-                                                        <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
-                                                    </span>
+														<select id="personnel" name="personnel" autocomplete="personnel-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+
+                                                        </select>
+                                                        </span>
                                                     <span>
-                                                        <input type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom" value="Add"/>
+                                                        <button class="btn btn-accent m-btn m-btn--air m-btn--custom" id='addemployee'> Add </button>
+                                                        <!-- <input type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom" value="Add"/> -->
                                                     </span>
 												</span>
 											</div>
@@ -43,7 +70,7 @@
                                                                 <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_appro_act" id='f_appro_act'/>
+                                                                        <input type='checkbox' name="f_appro_act" id='f_appro_act' value="For Appropriate Action"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
@@ -54,7 +81,7 @@
                                                             <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_info" id='f_info'/>
+                                                                        <input type='checkbox' name="f_info" id='f_info' value="For Information"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
@@ -65,7 +92,7 @@
                                                             <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_ref"  id='f_ref'/>
+                                                                        <input type='checkbox' name="f_ref"  id='f_ref' value="For Reference"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
@@ -76,7 +103,7 @@
                                                             <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_gd" id='f_gd'/>
+                                                                        <input type='checkbox' name="f_gd" id='f_gd' value="For Guidance"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
@@ -87,7 +114,7 @@
                                                             <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_rev_eval" id='f_rev_eval'/>
+                                                                        <input type='checkbox' name="f_rev_eval" id='f_rev_eval' value="For Review and Evaluation"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
@@ -98,22 +125,22 @@
                                                             <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_app_sig" id='f_app_sig'/>
+                                                                        <input type='checkbox' name="f_app_sig" id='f_app_sig' value="For Approval / Signature"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_app_sig" class="font-small text-gray-900">For Approval / Signature </label>
+                                                                    <label for="f_app_sig" class="font-small text-gray-900">For Approval / Signature</label>
                                                                 </div>
                                                             </div>
 
                                                             <div class="flex gap-3 mt-0">
                                                                 <div class="flex h-6 shrink-0 items-center">
                                                                     <div class="group grid size-4 grid-cols-1">
-                                                                        <input type='checkbox' name="f_inst" id='f_inst'/>
+                                                                        <input type='checkbox' name="f_inst" id='f_inst' value="For Instruction"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_inst" class=" text-gray-900">For Instruction </label>
+                                                                    <label for="f_inst" class=" text-gray-900">For Instruction</label>
                                                                 </div>
                                                             </div>
                                                             </div>
@@ -123,12 +150,7 @@
 												<span class="m-widget12__text2">
 													Recipients
 													<br> <br>
-														<ul>
-                                                            <li> Alvin Merto </li>
-                                                            <li> Alvin Merto </li>
-                                                            <li> Alvin Merto </li>
-                                                            <li> Alvin Merto </li>
-                                                        </ul>
+														<ul id='recipients'> </ul>
 												</span>
 											</div>
 											<div class="m-widget12__item">
@@ -142,8 +164,8 @@
 													</div>
 													<br>
 													<div class="m-widget12__progress">
-														<input type="submit" class="btn btn-accent m-btn m-btn--air m-btn--custom mr-3" value="Send Document"/>
-                                                        <a class="close_window"> Exit </a>
+														<input type="submit" id='senddocument' class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air" value="Send Document"/>
+                                                        <!-- <a class="close_window"> Exit </a> -->
                                                     </div>
 												</div>
 											</div>
