@@ -75,6 +75,24 @@
 		<script src="{{asset('app')}}/js/dashboard.js" type="text/javascript"></script>
         <script src="{{asset('app')}}/js/dashboard_procs.js" type="text/javascript"></script>
         <script src="{{asset('app')}}/js/events_doctrack.js" type="text/javascript"></script>
+        
+        <script src="//js.pusher.com/3.1/pusher.min.js"></script>
 
+        <script type="text/javascript">
+            // Pusher.logToConsole = true;
+
+            // var pusher = new Pusher('05e1789882046ea5349d', {
+            //     cluster: 'ap1',
+            //     encrypted: true
+            // });
+
+            // var channel = pusher.subscribe('my-channel');
+
+            // channel.bind('App\\Events\\StatusLiked', function(data) {
+            //     alert("aw");
+            //     console.log(JSON.stringify(data));
+            // });
+        </script>
+ 
     </body>
 </html>

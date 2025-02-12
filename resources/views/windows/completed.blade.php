@@ -1,11 +1,14 @@
 <x-app-layout>
+    <div id='dialog_window'>
+        <span id="display_here"></span>
+    </div>
     <div class="m-grid__item m-grid__item--fluid m-wrapper">
 					<!-- BEGIN: Subheader -->
 					<div class="m-subheader ">
 						<div class="d-flex align-items-center">
 							<div>
 								<h3 class="m-subheader__title ">
-									Completed Documents  
+									{{ $websitename }}  
 								</h3>
 							</div>
                                     <div class="mr-auto">
@@ -27,7 +30,7 @@
                             <div class="col-xl-12">
                                 <div class="row m-row--full-height">
 									<div class="col-sm-12 col-md-12 col-lg-12">
-                                      <div class="col-xl-12">
+                                      <div class="col-xl-12_">
                                         <!--begin:: Widgets/Application Sales-->
                                         <div class="m-portlet m-portlet--full-height ">
                                             <div class="m-portlet__head">
@@ -55,13 +58,13 @@
                                                         <div class="m-portlet__head-tools">
                                                             <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
                                                                 <li class="nav-item m-tabs__item">
-                                                                    <a class="nav-link m-tabs__link active small_link_click" data-action="incomming" data-status='1' data-toggle="tab" href="#m_widget11_tab1_content" role="tab">
+                                                                    <a class="nav-link m-tabs__link active all_docs" data-action="internal" data-status='1' data-toggle="tab" href="#m_widget11_tab1_content" role="tab">
                                                                         Internal
                                                                     </a>
                                                                 </li>
 
                                                                 <li class="nav-item m-tabs__item" id="theexternallink_needsaction">
-                                                                    <a class="nav-link m-tabs__link small_link_click" data-action="external" data-status='2' data-toggle="tab" href="#m_widget11_tab2_content" role="tab">
+                                                                    <a class="nav-link m-tabs__link all_docs" data-action="external" data-status='2' data-toggle="tab" href="#m_widget11_tab2_content" role="tab">
                                                                         External
                                                                     </a>
                                                                 </li>
@@ -83,7 +86,7 @@
                                                                     <thead>
                                                                         <tr>
                                                                             <td class="m-widget11__label">
-                                                                                #
+                                                                               <i class='la la-bookmark-o'></i>
                                                                             </td>
                                                                             <td class="m-widget11__app">
                                                                                 Document
@@ -112,9 +115,9 @@
                                                                 <!--end::Table-->
                                                             </div>
                                                             <div class="m-widget11__action m--align-right">
-                                                                <button type="button" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--hover-brand">
+                                                                <!-- <button type="button" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--hover-brand">
                                                                     Generate Report
-                                                                </button>
+                                                                </button> -->
                                                             </div>
                                                         </div>
                                                         <!--end::Widget 11-->

@@ -120,6 +120,7 @@ class EntrycontrolController extends Controller
         
         $info        = PpersonnelTable::where(["userid"=>Auth::id()])->get()->toArray();
 
+        $sendmail_outgoing = false;
         if ($typeofdoc == "internal") {
             $division   = 0;
             $user       = 0;
@@ -200,11 +201,14 @@ class EntrycontrolController extends Controller
             if ($outgoingdocs->save()) {
                 $saved = true;
             }
+
+            $sendmail_outgoing = true;
             // send through email
         }
 
         // upload file here
-            $fileup = (new FileControllerController)->uploadfile($req,$req->input("barcode-number"));
+            // $fileup = (new FileControllerController)->uploadfile($req,$req->input("barcode-number"));
+            $fileup                     = (new FileControllerController)->normal_upload($req,$req->input("barcode-number"));
 
                 // $file     = $req->file("thefile");
                 // $name     = date("mdy_hisA")."_".$file->getClientOriginalName();
@@ -219,7 +223,24 @@ class EntrycontrolController extends Controller
                 if ($filesave->save()) {
                     $saved = true;
                 }
-                
+        
+        if ($sendmail_outgoing) {
+            $email_dets['sendersemail'] = $req->input("toemailaddr");
+            $email_dets['about']        = $req->input("about");
+            $email_dets['atts']         = "";
+            $email_dets['subject']      = $req->input("emailsubject");
+            $file                       = $req->file("thefile");                           
+
+            Mail::raw('This email confirms that everything was set up correctly!', function ($message) use ($email_dets, $file) { 
+                        $message->to($email_dets['sendersemail'])
+                                ->subject($email_dets['subject'])
+                                ->attach($file->getRealPath(), array(
+                                    'as'   => $file->getClientOriginalName(), // If you want you can chnage original name to custom name      
+                                    'mime' => $file->getMimeType())
+                                )
+                                ->html($email_dets['about']);
+                    }); 
+        }
             // $filesaved = (new FileControllerController)->uploadfile($req);
         // upload file here
 
@@ -232,7 +253,8 @@ class EntrycontrolController extends Controller
 
     function autoupload(Request $req) {
         // upload file here
-        $fileup                     = (new FileControllerController)->uploadfile($req,"new-file");
+        // $fileup                     = (new FileControllerController)->uploadfile($req,"new-file");
+        $fileup                     = (new FileControllerController)->normal_upload($req,"file");
 
         $saved                      = false;
         $documentid                 = $req->input("docid");
@@ -248,6 +270,26 @@ class EntrycontrolController extends Controller
         }
         
         return response()->json($saved);
+    }
+
+    function generatereport($what) {
+        $collection = [];
+
+        switch($what) {
+            case "external":
+                $collection = ExternalDocs::all();
+                break;
+        }
+        
+        return view("windows.reportgeneration")->with(["collection" => $collection]);
+    }
+
+    function getexternal(Request $req) {
+
+    }
+
+    function getInternal(Request $req) {
+        $collection = InternalDocs::all();
     }
 
     function testcont() {

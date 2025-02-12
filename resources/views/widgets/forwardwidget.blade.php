@@ -18,12 +18,12 @@
 									</div> -->
 									<div class="m-portlet__body">
 										<div class="m-widget12">
-											<div class="m-widget12__item">
+											<div class="m-widget12__item mb-4">
 												<span class="m-widget12__text1">
 													Office / Division
 													<br>
 													<span>
-														<select id="offices" name="offices" autocomplete="offices-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+														<select id="offices" name="offices" autocomplete="offices-name" class="font-13-it block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
                                                                 <optgroup label = "Offices">
                                                                     <?php 
                                                                         foreach($office as $off) {
@@ -47,11 +47,15 @@
                                                         </select>
 													</span>
 												</span>
+                                            </div>
+                                            <div class="m-widget12__item mb-4">
 												<span class="m-widget12__text2">
 													Name of Personnel
 													<br>
 													<span>
-														<select id="personnel" name="personnel" autocomplete="personnel-name" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+														<select id="personnel" name="personnel" autocomplete="personnel-name" 
+                                                                style="min-width: 300px;"
+                                                                class="font-13-it block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6">
 
                                                         </select>
                                                         </span>
@@ -61,7 +65,7 @@
                                                     </span>
 												</span>
 											</div>
-											<div class="m-widget12__item">
+											<div class="m-widget12__item mb-4">
 												<span class="m-widget12__text1">
 													Actions
 													<br>
@@ -74,7 +78,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_appro_act" class="font-small text-gray-900">For Appropriate Action</label>
+                                                                    <label for="f_appro_act" class="font-13-it text-gray-900">For Appropriate Action</label>
                                                                 </div>
                                                             </div>
 
@@ -85,7 +89,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_info" class="font-small text-gray-900">For Information</label>
+                                                                    <label for="f_info" class="font-13-it text-gray-900">For Information</label>
                                                                 </div>
                                                             </div>
 
@@ -96,7 +100,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_ref" class="font-small text-gray-900">For Reference</label>
+                                                                    <label for="f_ref" class="font-13-it text-gray-900">For Reference</label>
                                                                 </div>
                                                             </div>
 
@@ -107,7 +111,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_gd" class="font-small text-gray-900">For Guidance</label>
+                                                                    <label for="f_gd" class="font-13-it text-gray-900">For Guidance</label>
                                                                 </div>
                                                             </div>
 
@@ -118,7 +122,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_rev_eval" class="font-small text-gray-900">For Review and Evaluation</label>
+                                                                    <label for="f_rev_eval" class="font-13-it text-gray-900">For Review and Evaluation</label>
                                                                 </div>
                                                             </div>
 
@@ -129,7 +133,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_app_sig" class="font-small text-gray-900">For Approval / Signature</label>
+                                                                    <label for="f_app_sig" class="font-13-it text-gray-900">For Approval / Signature</label>
                                                                 </div>
                                                             </div>
 
@@ -140,9 +144,32 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="text-sm/6 ml-1">
-                                                                    <label for="f_inst" class=" text-gray-900">For Instruction</label>
+                                                                    <label for="f_inst" class="font-13-it text-gray-900">For Instruction</label>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="flex gap-3 mt-0">
+                                                                <div class="flex h-6 shrink-0 items-center">
+                                                                    <div class="group grid size-4 grid-cols-1">
+                                                                        <input type='checkbox' name="f_rev" id='f_rev' value="For Revision"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-sm/6 ml-1">
+                                                                    <label for="f_rev" class="font-13-it text-gray-900">For Revision</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="flex gap-3 mt-0">
+                                                                <div class="flex h-6 shrink-0 items-center">
+                                                                    <div class="group grid size-4 grid-cols-1">
+                                                                        <input type='checkbox' name="f_approved" id='f_approved' value="APPROVED"/>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-sm/6 ml-1">
+                                                                    <label for="f_approved" class="font-13-it text-gray-900">APPROVED</label>
+                                                                </div>
+                                                            </div>
+
                                                             </div>
                                                         </fieldset>
 
@@ -165,7 +192,7 @@
 													<br>
 													<div class="m-widget12__progress">
 														<input type="submit" id='senddocument' class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air" value="Send Document"/>
-                                                        <!-- <a class="close_window"> Exit </a> -->
+                                                        <span class="loading_"> Please wait while the document is being forwarded. </span>
                                                     </div>
 												</div>
 											</div>

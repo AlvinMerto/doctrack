@@ -6,7 +6,7 @@ var empslist    = [];
 
 var documentid  = null;
 
-$(document).ready(function(){
+$(document).ready(function() {
     var divisionid   = $(document).find("#offices").val();
     getpersonnel(divisionid);
 
@@ -20,7 +20,24 @@ $(document).ready(function(){
     
     func_extbtn(loa, big_link);
 
-    // theexternallink_needsaction
+    // get bookmarks 
+    getbookmarks("bookmarkslist");
+
+    // theexternallink_needsaction 
+    var href = window.location.href;
+
+    if (href.split("/")[3] == "completed") {
+        get_done_docs("internal");
+    }
+    
+    if (href.split("/")[3] == "alldocuments") {
+        get_alldocs("internal");
+    }
+
+});
+
+$(document).on("click",".all_docs", function(){
+    get_alldocs( $(this).data("action") );
 });
 
 $(document).on("click",".tab_link_big", function(){
@@ -33,7 +50,8 @@ $(document).on("click",".tab_link_big", function(){
    
 });
 
-$(document).on("click","#docslist .item_row", function(){
+// #docslist 
+$(document).on("click",".item_row", function(){
     empslist = [];
     $(document).find("#dialog_window").show();
 
@@ -49,9 +67,16 @@ $(document).on("click","#docslist .item_row", function(){
             $(data).appendTo("#display_here");
 
             getwindow("docdetails",documentid,"details_div");
+
+
         }
     });
 });
+
+// .on("contextmenu", "#docslist .item_row", function(e) {
+//     e.preventDefault();
+//     $("<div class='contextmenu_div'> <ul> <li> Add to Bookmark </li> </ul> </div>").appendTo( $(this) );
+// });
 
 $(document).on("click","#forwarddoc", function(){
     $(document).find("#dialog_window").show();
@@ -82,14 +107,35 @@ $(document).on("click",".getwindow", function(){
 
     empslist = [];
     getwindow(getwhat,documentid,displayto);
+
+});
+
+$(document).on("click","#attachments_ul li", function(){
+    var src   = $(this).find("p").data("fileloc");
+    var count = this.id;
+
+    display_to_embed(src, count);
+});
+
+$(document).on("click","#atts_files_nav", function() {
+    $(document).find("#the_file_canvass").show();
+    $(document).find("#the_document_details").hide();
+
+    $(document).find("#doc_details_nav").removeClass("selected_p");
+});
+
+$(document).on("click","#doc_details_nav", function(){
+    $(document).find("#the_file_canvass").hide();
+    $(document).find("#the_document_details").show();
+
+    $(document).find("#attachments_ul li").removeClass("selected_p");
+    $(this).addClass("selected_p");
 });
 
 $(document).on("change","#offices", function(){
     var divisionid   = $(this).val();
     getpersonnel(divisionid);
 });
-
-    
     
 // add employee to recipient's list
     $(document).on("click","#addemployee", function(){
@@ -133,6 +179,8 @@ $(document).on("click","#senddocument", function(){
     var f_rev_eval  = $(document).find("#f_rev_eval").is(":checked");
     var f_app_sig   = $(document).find("#f_app_sig").is(":checked");
     var f_inst      = $(document).find("#f_inst").is(":checked");
+    var f_rev       = $(document).find("#f_rev").is(":checked");
+    var f_approved  = $(document).find("#f_approved").is(":checked");
 
     var offices     = $(document).find("#offices").val();
     var office_name = $(document).find("#offices :selected").text();
@@ -172,6 +220,14 @@ $(document).on("click","#senddocument", function(){
              values.actions.push( $(document).find("#f_inst").val() );
         }
 
+        if (f_rev) {
+             values.actions.push( $(document).find("#f_rev").val() );
+        }
+
+        if (f_approved) {
+             values.actions.push( $(document).find("#f_approved").val() );
+        }
+
         values.offices      = offices;
         values.about        = about;
         values.emps         = empslist;
@@ -187,9 +243,13 @@ $(document).on("click","#senddocument", function(){
             type     : "post",
             data     : {vals: JSON.stringify(values)},
             dataType : "json",
+            beforeSend: function() {
+                $(document).find(".loading_").show();
+            },
             success  : function(data) {
                 if (data == true || data == "true") {
                     alert("File has been forwarded successfully!");
+                    $(document).find(".loading_").hide();
                     empslist = [];
                 }
             }, error : function() {
@@ -298,9 +358,87 @@ $(document).on("keyup","#m_quicksearch_input", function() {
 
  $(document).on("click","#provideupdate_btn", function(){
     // alert( $(document).find("#completedcheck").is(":checked") );
-    provideupdate( $(document).find("#updatebox").val() , documentid , $(document).find("#completedcheck").is(":checked"));
+    provideupdate( $(document).find("#updatebox").val() , documentid , $(document).find("#completedcheck").is(":checked"), function() {
+        $(document).find("#updatediv").hide();
+    });
  });
 
  $(document).on("click","#dialog_window", function(){
    
  })
+
+$(document).on("click",".bookmarkthis", function(){
+    if ($(this).is(":checked")) {
+        var docid = $(this).val();
+
+        bookmarkthis(docid, $(this));
+    }
+});
+
+$(document).on("click",".done_docs", function(){
+    var action = $(this).data("action");
+
+    get_done_docs(action);
+});
+
+$(document).on("click",".removebookmark", function(){
+    var did = $(this).data('did');
+    
+    var conf = confirm("Are you sure you want to delete this?");
+
+    if (!conf) {
+        return;
+    }
+    
+    removebookmark(did);
+})
+
+var currentlyediting = null;
+$(document).on("click",'.edit', function(){
+    var userid = currentlyediting = $(this).data("uid");
+    // showwidgethere
+    $(document).find("#showwidgethere").children().remove();
+    $.ajax({
+        url      : url+"/manageuserwidget",
+        type     : "get",
+        dataType : "html",
+        data     : {userid : userid},
+        beforeSend : function(){
+            $(document).find("#showwidgethere").append("<p> Loading... </p>");   
+        },
+        success  : function(data){
+            $(document).find("#showwidgethere").children().remove();
+            $(document).find("#showwidgethere").append(data);
+        }, error : function() {
+            alert("error getting the widget for managing user");
+        }
+    });
+});
+
+$(document).on("click","#savechanges", function(){    
+    var divisionid = null;
+    var ids        = null;
+    var role       = null;
+
+    var officeid      = ids.split("_")[0];
+    var typeofaccount = ids.split("_")[1];
+
+    $.ajax({
+        url         : url+"/savemanagement",
+        type        : "post",
+        data        : { divisionid : divisionid , 
+                        officeid : officeid , 
+                        typeofaccount : typeofaccount,
+                        role : role, 
+                        uid : currentlyediting },
+        dataType    : "json",
+        beforeSend  : function() {
+
+        },
+        success     : function(data) {
+            alert(data);
+        }, error    : function() {
+            alert("Error managing the user");
+        }
+    }) 
+});

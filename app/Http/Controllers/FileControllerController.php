@@ -31,7 +31,7 @@ class FileControllerController extends Controller
         $pdf->AddPage();
         $pdf->setSourceFile( storage_path("app\public\public\attachments\/".$name) );
         // $pdf->setSourceFile( storage_path("app\private\public\attachments\/".$name) ); //public_path("ORCR-MERTO.pdf")
-        $tplId    = $pdf->importPage(1);
+        $tplId    = $pdf->importPage(1,PageBoundaries::CROP_BOX, true, true);
         $size     = $pdf->getTemplateSize($tplId);
         $pdf->useTemplate($tplId, 0, 0, $size['width']);
         $pdf->SetFont('Helvetica');
@@ -42,6 +42,16 @@ class FileControllerController extends Controller
         $pdf->Output( storage_path("app\public\public\attachments\/".$name) ,'F');
         // $pdf->Output( storage_path("app\public\attachments\/".$name) ,'F');
 
+        return ["name"=>$name,"path"=>$filepath];
+    }
+
+    function normal_upload(Request $req, $barcode) {
+        $file     = $req->file("thefile");
+        $old      = $file->getClientOriginalName();
+        
+        $name     = date("mdy_hisA")."_".$file->getClientOriginalName();
+        $filepath = $file->storeAs( 'public\attachments', $name);
+        
         return ["name"=>$name,"path"=>$filepath];
     }
 }

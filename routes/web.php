@@ -4,6 +4,11 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EntrycontrolController;
 use App\Http\Controllers\TheDocumentController;
 use App\Http\Controllers\ExternalDocsController;
+use App\Http\Controllers\BookmarksController;
+use App\Http\Controllers\PpersonnelTableController;
+use App\Http\Controllers\Controller;
+
+use App\Events\StatusLiked;
 
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +25,15 @@ Route::get('/', function () {
     }
 
     return redirect()->route("login");
+});
+
+Route::get('test', function () {
+    if (event(new App\Events\StatusLiked('Someone'))) {
+    // if (event(new StatusLiked('hello world'))) {
+        echo "hurray!!!";
+    } else {
+        echo "error";
+    }
 });
 
 Route::get("/testcont", [EntrycontrolController::class,"testcont"])->name('testcont');
@@ -69,7 +83,11 @@ Route::middleware('auth')->group(function () {
     Route::post("/entry",[EntrycontrolController::class,"postentry"])->name("postentry");
 
     Route::get("/completed",[TheDocumentController::class,"completed"])->name("completed");
+    Route::get("/alldocuments",[TheDocumentController::class,"alldocuments"])->name("alldocuments");
 
+    Route::get("/report/{what?}",[EntrycontrolController::class,"generatereport"])->name("generatereport");
+
+    Route::get("/user",[PpersonnelTableController::class,"manageUser"])->name("manageuser");
     // ajax calls
         Route::post('/getdocs', [TheDocumentController::class,"getdocs"])->name('getdocs');
         Route::get("/forwarddocs",[TheDocumentController::class,"forwarddocs"])->name('forwarddocs');
@@ -85,6 +103,17 @@ Route::middleware('auth')->group(function () {
         Route::post("/provideupdate",[TheDocumentController::class,"provideupdate"])->name('provideupdate');
 
         Route::post("/autoupload",[EntrycontrolController::class,"autoupload"])->name("autoupload");
+
+        Route::post("/bookmarkthis",[BookmarksController::class,"bookmarkthis"])->name("bookmarkthis");
+        Route::get("/getbookmarks", [BookmarksController::class,"getbookmarks"])->name("getbookmarks");
+        Route::post("/removebookmark",[BookmarksController::class,"removebookmark"])->name("removebookmark");
+        
+        Route::post("/donedocs", [TheDocumentController::class,"donedocs"])->name("donedocs");
+
+        Route::post('/alldocs',[TheDocumentController::class,"alldocs"])->name("alldocs");
+
+        Route::get("/manageuserwidget",[PpersonnelTableController::class,"manageuserwidget"])->name("manageuserwidget");
+        Route::post("/savemanagement", [PpersonnelTable::class,"savemanagement"])->name('savemanagement');
     // end
 });
 

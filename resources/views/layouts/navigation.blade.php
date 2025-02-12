@@ -8,7 +8,8 @@
 							<div class="m-stack m-stack--ver m-stack--general">
 								<div class="m-stack__item m-stack__item--middle m-stack__item--center m-brand__logo">
 									<a href="index.html" class="m-brand__logo-wrapper">
-										<img alt="" src="{{ asset('minda_logo.png') }}"/>
+										<!-- <p class='minda'> MinDA Document Tracking System </p> -->
+										<img alt="" src="{{ asset('minda_logo.png') }}" class='systemlogo'/>
 									</a>
 								</div>
 								<div class="m-stack__item m-stack__item--middle m-brand__tools">
@@ -70,9 +71,9 @@
 														<span class="m-menu__arrow "></span>
 														<ul class="m-menu__subnav">
 															<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-																<a  href="inner.html" class="m-menu__link ">
+																<a  href="{{route('manageuser')}}" class="m-menu__link ">
 																	<span class="m-menu__link-text">
-																		Users
+																		Manage Users
 																	</span>
 																</a>
 															</li>
@@ -104,10 +105,10 @@
 														</h3>
 														<ul class="m-menu__inner">
 															<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-																<a  href="inner.html" class="m-menu__link ">
+																<a  href="{{route('alldocuments')}}" class="m-menu__link ">
 																	<i class="m-menu__link-icon flaticon-map"></i>
 																	<span class="m-menu__link-text">
-																		Generate Report
+																		All Documents
 																	</span>
 																</a>
 															</li>
@@ -202,7 +203,7 @@
 																	</span>
 																</li>
 																<li class="m-nav__item">
-																	<a href="profile.html" class="m-nav__link">
+																	<a href="{{url('profile')}}" class="m-nav__link">
 																		<i class="m-nav__link-icon flaticon-profile-1"></i>
 																		<span class="m-nav__link-title">
 																			<span class="m-nav__link-wrap">
@@ -279,11 +280,14 @@
 
 						$dbselected = null;
 						$cmselected = null;
+						$allselected = null;
 
 						if ($window == "dashboard") {
 							$dbselected = "m-menu__item--active";
 						} else if ($window == "completed") {
 							$cmselected = "m-menu__item--active";
+						} else if ($window == "alldocuments") {
+							$allselected = "m-menu__item--active";
 						}
 					?>
 						<ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
@@ -305,6 +309,15 @@
 									</span>
 								</a>
 							</li>
+							<!-- <li class="m-menu__item  <?php // echo $allselected; ?>" aria-haspopup="true" >
+								<a  href="{{route('alldocuments')}}" class="m-menu__link ">
+									<span class="m-menu__item-here"></span>
+									<i class="m-menu__link-icon flaticon-layers"></i>
+									<span class="m-menu__link-text">
+										All Documents
+									</span>
+								</a>
+							</li> -->
 						</ul>
 					</div>
 					<!-- END: Aside Menu -->

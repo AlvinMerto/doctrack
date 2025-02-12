@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\FileController;
 
 use Auth;
+use Mail;
 use DB;
 use Carbon\Carbon;
 
@@ -38,36 +39,49 @@ class TheDocumentController extends Controller
         $levelofaccess = $acct_type[0]->levelofaccess;
         $acct_type     = $acct_type[0]->offtype->offtype;
         
-        if ($acct_type == 1) {
-            $internal   = $this->getinternal(["internal_docs.status" => 1,"the_documents.docmgt" => "internal"])->count();
-            $external   = $data   = $this->getExternal(["status"=>$acct_type,"the_documents.docmgt" => "external"])->count();
+        // if ($acct_type == 1) {
+        //     $internal   = $this->getinternal(["internal_docs.status" => 1,"the_documents.docmgt" => "internal"])->count();
+        //     $external   = $data   = $this->getExternal(["status"=>$acct_type,"the_documents.docmgt" => "external"])->count();
 
-            // needs action
-            $p1    = $this->getinternal(["internal_docs.status" => null,"the_documents.docmgt" => "internal"])->count();
-            $p2    = $this->getexternal(["status"=>null,"the_documents.docmgt" => "external"])->count();
+        //     // needs action
+        //     $p1    = $this->getinternal(["internal_docs.status" => null,"the_documents.docmgt" => "internal"])->count();
+        //     $p2    = $this->getexternal(["status"=>null,"the_documents.docmgt" => "external"])->count();
 
-            // overdue
-            // $o1   = $this->getinternal(["status" => 1])->count();
-            // $o2   = $this->getExternal(["status"=>$acct_type])->count();
-            $o1    = InternalDocs::where('created_at', '<=', Carbon::now()->subDays(5)->toDateTimeString())
-                                            ->where("status",1)
-                                            ->get()->count();
-            $o2    = ExternalDocs::where("created_at","<=", Carbon::now()->subdays(5)->toDateTimeString())
-                                            ->where("status", 1)
-                                            ->get()->count();
-        } else {
-            $internal   = $this->getinternal(["internal_docs.status" => $acct_type, "to"=>Auth::id(),"the_documents.docmgt" => "internal"])->count();
-            $external   = $this->getExternal(["status"=>$acct_type, "routeto" => Auth::id(),"the_documents.docmgt" => "external"])->count();
+        //     // overdue
+        //     // $o1   = $this->getinternal(["status" => 1])->count();
+        //     // $o2   = $this->getExternal(["status"=>$acct_type])->count();
+        //     $o1    = InternalDocs::where('created_at', '<=', Carbon::now()->subDays(5)->toDateTimeString())
+        //                                     ->where("status",1)
+        //                                     ->get()->count();
+        //     $o2    = ExternalDocs::where("created_at","<=", Carbon::now()->subdays(5)->toDateTimeString())
+        //                                     ->where("status", 1)
+        //                                     ->get()->count();
+        // } else {
+        //     // $internal   = $this->getinternal(["internal_docs.status" => $acct_type, "to"=>Auth::id(),"the_documents.docmgt" => "internal"])->count();
+        //     $internal         = DB::table("internal_docs")
+        //                                 ->select("internal_docs.status","the_documents.*","users.name")
+        //                                 ->join("foot_prints","internal_docs.documentid","=","foot_prints.documentid")
+        //                                 ->join("the_documents","internal_docs.documentid","=","the_documents.documentid")
+        //                                 ->join("users","internal_docs.from","=","users.id")
+        //                                 ->where(["the_documents.docmgt" => "internal",
+        //                                              "internal_docs.status" => $acct_type,
+        //                                              "foot_prints.status"   => 1,
+        //                                              "foot_prints.touserid" => Auth::id()])
+        //                                 ->get();
+        
+        //     $external   = $this->getExternal(["status"=>$acct_type, "routeto" => Auth::id(),"the_documents.docmgt" => "external"])->count();
 
-            // needs action
-            $p1    = $this->getexternal(["status"=>null,"the_documents.docmgt" => "external"])->count();
-            $p2    = $this->getinternal(["internal_docs.status" => null, "to"=>Auth::id(),"the_documents.docmgt" => "internal"])->count();
+        //     // needs action
+        //     $p1    = $this->getexternal(["status"=>null,"the_documents.docmgt" => "external"])->count();
+        //     $p2    = $this->getinternal(["internal_docs.status" => null, "to"=>Auth::id(),"the_documents.docmgt" => "internal"])->count();
             
-            // overdue
-            $o1   = $this->getExternal(["status"=>$acct_type,"the_documents.docmgt" => "external"])->count();
-            $o2   = $this->getExternal(["status"=>$acct_type, "routeto" => Auth::id(),"the_documents.docmgt" => "external"])->count();
-        }
+        //     // overdue
+        //     $o1   = $this->getExternal(["status"=>$acct_type,"the_documents.docmgt" => "external"])->count();
+        //     $o2   = $this->getExternal(["status"=>$acct_type, "routeto" => Auth::id(),"the_documents.docmgt" => "external"])->count();
+        // }
 
+        $internal = $external = $p1 = $p2 = $o1 = $o2 = 0;
+    
         return view('dashboard')->with(["internal"=>$internal, "external"=>$external,"needsaction"=>($p1+$p2),"overdue"=>($o1+$o2), "accttype"=>$acct_type,"levelofaccess" => $levelofaccess]);
     }
 
@@ -102,6 +116,7 @@ class TheDocumentController extends Controller
                                                       "the_documents.docmgt" => "internal"]);
                         //dd($data);
                     } else { // non records
+                    // echo $acct_type;
                         // $data   = $this->getinternal(["status" => $acct_type, "to"=>Auth::id()]);
                         $data         = DB::table("internal_docs")
                                             ->select("internal_docs.status","the_documents.*","remarks_tables.actionneeded",
@@ -116,14 +131,6 @@ class TheDocumentController extends Controller
                                                      "foot_prints.touserid" => Auth::id()])
                                             ->orderByDesc("remarkstableid")
                                             ->get();
-
-                        // $data      = FootPrint::with(["getdocs" => function($q) {
-                        //                 $q->where("docmgt","internal");
-                        //              }, "getInternal" => function($qq) use ($acct_type) {
-                        //                 $qq->where("status",$acct_type);
-                        //              }])->where(["touserid"=>Auth::id(),"typeofdocument"=>"internal"])->get();
-                        // dd($data);
-                        // getdocs
                     }
                     $documentidname = "documentid";
                 }
@@ -137,10 +144,11 @@ class TheDocumentController extends Controller
                     } else { // non records
                         $data         = DB::table("external_docs")
                                             ->select("external_docs.status","external_docs.sendersname","the_documents.*","remarks_tables.actionneeded",
-                                                      "remarks_tables.remarks","remarks_tables.created_at as retdate")
+                                                      "remarks_tables.remarks","remarks_tables.created_at as retdate","users.name")
                                             ->join("foot_prints","external_docs.document_id","=","foot_prints.documentid")
                                             ->join("remarks_tables","external_docs.document_id","=","remarks_tables.documentid")
                                             ->join("the_documents","external_docs.document_id","=","the_documents.documentid")
+                                            ->join("users","external_docs.routeto","=","users.id")
                                             ->where(["the_documents.docmgt" => "external",
                                                      "external_docs.status" => $acct_type,
                                                      "foot_prints.touserid" => Auth::id()])
@@ -154,9 +162,6 @@ class TheDocumentController extends Controller
                 if ($req->input('action') == 1) {
                     // get internal
                     if ($acct_type == 1) { // logged in account is a member of the records
-                        // $data = InternalDocs::where('created_at', '<=', Carbon::now()->subDays(5)->toDateTimeString())
-                        //                     ->where("status",$acct_type)
-                        //                     ->get();
                         $data         = DB::table("internal_docs")
                                             ->select("internal_docs.status","the_documents.*","remarks_tables.actionneeded",
                                                       "remarks_tables.remarks","remarks_tables.created_at as retdate","users.name")
@@ -169,10 +174,6 @@ class TheDocumentController extends Controller
                                             ->orderByDesc("remarkstableid")
                                             ->get();
                     } else {
-                        // $data = InternalDocs::where('created_at', '<=', Carbon::now()->subDays(5)->toDateTimeString())
-                        //                     ->where("status",$acct_type)
-                        //                     ->where("to",Auth::id())
-                        //                     ->get();
 
                         $data         = DB::table("internal_docs")
                                             ->select("internal_docs.status","the_documents.*","remarks_tables.actionneeded",
@@ -284,7 +285,7 @@ class TheDocumentController extends Controller
                                             ->orderByDesc("remarkstableid")
                                             ->get();
 
-                        if ($acct_type == 2 || $acct_type == 4 || $acct_type == 3) { // OED
+                        if ($acct_type == 2 || $acct_type == 3) { // OED
                             if ($levelofaccess == 1) {
                                 $data       = DB::table("internal_docs")
                                                 ->select("internal_docs.status","the_documents.*","users.name","remarks_tables.action",
@@ -301,13 +302,6 @@ class TheDocumentController extends Controller
                             }
                         }
 
-                        // $data    = InternalDocs::where('status',"!=",7)->where("from","=",Auth::id())->get();
-                        // $data    = $this->getinternal(["status" => null, "from"=>Auth::id()]);
-                        //  $data      = FootPrint::with(["getdocs" => function($q) {
-                        //                 $q->where("docmgt","internal");
-                        //              }, "getInternal" => function($qq) use ($acct_type) {
-                        //                 $qq->where("status","!=",7);
-                        //              }])->where("touserid",Auth::id())->get();
                     }
                     $documentidname = "documentid";
                 }
@@ -332,22 +326,8 @@ class TheDocumentController extends Controller
                                             ->orderByDesc("remarkstableid")
                                             ->get();
                         }
-                        // $data           = DB::table("external_docs")
-                        //                         ->select("external_docs.status","the_documents.*","remarks_tables.actionneeded",
-                        //                                   "remarks_tables.remarks","remarks_tables.created_at as retdate")
-                        //                         ->join("foot_prints","external_docs.document_id","=","foot_prints.documentid")
-                        //                         ->join("remarks_tables","external_docs.document_id","=","remarks_tables.documentid")
-                        //                         ->join("the_documents","external_docs.document_id","=","the_documents.documentid")
-                        //                         ->where(["the_documents.docmgt" => "external",
-                        //                                  "external_docs.status" => $acct_type,
-                        //                                  "foot_prints.touserid" => Auth::id()])
-                        //                         ->get();
+
                     }
-                    // $data      = FootPrint::with(["getdocs" => function($q) {
-                    //                     $q->where("docmgt","external");
-                    //                  }, "getExternal" => function($qq) use ($acct_type) {
-                    //                     $qq->where("status","!=",7);
-                    //                  }])->where("touserid",Auth::id())->get();
                 }
 
                 break;
@@ -396,15 +376,15 @@ class TheDocumentController extends Controller
         list($officeid, $offtype)   = explode("_",$values['offices']);
         $officename   = $values['officename'];
         $emps         = $values['emps'];
-        $about        = $values['about'];
+        // $about        = $values['about'];
         $actions      = $values['actions'];
         $documentid   = $values['documentid'];
         
         $nameofsender = User::where("id",Auth::id())->get("name");
 
         // update first the status within internal, external, outgoing tables whichever the document falls
-        $documentDets = TheDocument::where("documentid",$documentid)->get("docmgt");
-        
+        $documentDets = TheDocument::where("documentid",$documentid)->get(["docmgt","barcodenumber", "subject"]);
+        $about        = $documentDets[0]->subject;
         /*
             1 = routed to records
             2 = routed to OED
@@ -429,12 +409,17 @@ class TheDocumentController extends Controller
                 break;
         }
 
+        $barcode    = $documentDets[0]->barcodenumber;
+
         foreach($emps as $e) {
             if ($e != null) {
-                $name               = User::where("id",$e)->get("name")[0]->name;
+                $user               = User::where("id",$e)->get(["name","email"]);
+                
+                $name               = $user[0]->name;
+                $email              = $user[0]->email;
 
                 // remarks 
-                $remarkstable = new RemarksTable();
+                $remarkstable                = new RemarksTable();
                 $remarkstable->documentid    = $documentid;
                 $remarkstable->remarkerid    = Auth::id();
                 $remarkstable->toid          = $officeid;
@@ -443,7 +428,7 @@ class TheDocumentController extends Controller
                 $remarkstable->actionneeded  = implode("<br/>",$actions);
                 $remarkstable->action        = $nameofsender[0]->name." forwarded this document to {$name}";
                 $remarkstable->remarks       = $about;
-                $remarkstable->status        = 1;
+                $remarkstable->status        = 7;
                 $remarkstable->save();
 
                 // footprint
@@ -453,7 +438,35 @@ class TheDocumentController extends Controller
                 $FootPrint->touserid 	    = $e;
                 $FootPrint->fromuserid      = Auth::id();
                 $FootPrint->status          = 1;
-                $FootPrint->save();
+                $fp                         = $FootPrint->save();
+
+                // if save:: send to email
+                    if ($fp) {
+                        $email_rec  = [
+                            "name"  => $name,
+                            "title" => $about,
+                            "bid"   => $barcode,
+                            "url"   => url("dashboard")
+                        ];
+
+                        $email_dets = [
+                            "toemail"      => $email,
+                            "about"        => $about,
+                            "barcode"      => $barcode,
+                            "url"          => "hello.com",
+                            "name"         => $name,
+                            "body"         => view("templates.route")->with(["data"=>$email_rec])->render()
+                        ];
+
+                        // send email
+                            Mail::raw('This email confirms that everything was set up correctly!', function ($message) use ($email_dets) { 
+                                $message->to($email_dets['toemail'])
+                                        ->from("no-reply@minda.gov.ph",$email_dets['name'])
+                                        ->subject($email_dets['about']." has been routed to you with a tracking number of ".$email_dets['barcode'])
+                                        ->html($email_dets['body']);
+                            }); 
+                    }
+                // end sending to email
             }
         }
 
@@ -488,8 +501,10 @@ class TheDocumentController extends Controller
         $office      = null;
         $division    = "";
         $owner       = null;
-
+        
+        // $docid       = 119;
         $remarks     = RemarksTable::where("documentid", $docid)->get();
+        // echo $remarks[1]['action'];
         $attachments = FileController::where("documentid", $docid)->get();
 
         switch($docmgt) {
@@ -528,13 +543,11 @@ class TheDocumentController extends Controller
         }
 
         // if ($remarks->count() == 0) {
-        if ( $remarks->count() == 0  ) {
+        if ( $remarks->count() == 0 ) { //$remarks->count() == 0  count($remarks) == 0
             $remarks = false;
         } else {
-            $remarks = $remarks[0];
+            //$remarks = $remarks[0];
         }
-
-
 
         return view("widgets.documentdetails")->with(["document" =>$document, 
                                                       "details"  => $details, 
@@ -543,6 +556,10 @@ class TheDocumentController extends Controller
                                                       "division" => $division,
                                                       "owner"    => $owner,
                                                       "files"    => $attachments]);
+    }
+
+    function getattachments(Request $req) {
+        $attachments = FileController::where("documentid", $req->input("docid"))->get();
     }
 
     function dochistory(Request $req) {
@@ -574,16 +591,30 @@ class TheDocumentController extends Controller
 
     function getpersonnel(Request $req) {
         $personnel = PpersonnelTable::where("divisionid",$req->input("divid"))->get();
+        $getwhat   = "division";
 
         if (count($personnel) == 0) {
             $personnel = PpersonnelTable::where("officeid",$req->input("divid"))->get();
+            $getwhat   = "office";
         }
 
         $a         = "";
 
         foreach($personnel as $p) {
             // $a     .= "<option> {$p->getdivs->divisionname} </option>";
-            $a     .= "<option value='{$p->getUsers->id}'> {$p->getUsers->name} </option>";
+            switch($getwhat) {
+                case "division":
+                    if ($p->divisionid != 0) {
+                        $a     .= "<option value='{$p->getUsers->id}'> {$p->getUsers->name} </option>";
+                    }
+                    break;
+                case "office":
+                    if ($p->divisionid == 0) {
+                        $a     .= "<option value='{$p->getUsers->id}'> {$p->getUsers->name} </option>";
+                    }
+                    break;
+            }
+            
         }
 
         return $a;
@@ -616,7 +647,135 @@ class TheDocumentController extends Controller
     }
 
     function completed() {
-        return view("windows.completed");
+        return view("windows.completed")->with(["websitename"=>"Completed Documents"]);
+    }
+
+    function alldocuments() {
+        return view("windows.completed")->with(["websitename"=>"All Documents"]);
+    }
+
+    function alldocs(Request $req) {
+       $action         = $req->input("action");
+
+        $acct_type     = PpersonnelTable::where(["userid"=>Auth::id()])->get();
+        $levelofaccess = $acct_type[0]->levelofaccess;
+        $acct_type     = $acct_type[0]->offtype->offtype;
+
+
+        $data           = [];
+        $documentidname = null;
+        switch($action) {
+            case "internal":
+                $documentidname = "documentid";
+                if ($acct_type == 1) {
+                    echo "hello";
+                    // $data   = $this->getinternal(["the_documents.docmgt" => "internal"]);
+                    $data         = DB::table("internal_docs")
+                                        ->select("internal_docs.status","the_documents.*","remarks_tables.actionneeded",
+                                                "remarks_tables.remarks","remarks_tables.created_at as retdate","users.name")
+                                        ->join("remarks_tables","internal_docs.documentid","=","remarks_tables.documentid")
+                                        ->join("the_documents","internal_docs.documentid","=","the_documents.documentid")
+                                        ->join("users","internal_docs.from","=","users.id")
+                                        ->where(["the_documents.docmgt" => "internal"])
+                                        ->orderByDesc("remarkstableid")
+                                        ->get();
+                } else {
+                    $data   = [];
+                    // $data         = DB::table("internal_docs")
+                    //                     ->select("internal_docs.status","the_documents.*","remarks_tables.actionneeded",
+                    //                             "remarks_tables.remarks","remarks_tables.created_at as retdate","users.name")
+                    //                     ->join("foot_prints","internal_docs.documentid","=","foot_prints.documentid")
+                    //                     ->join("remarks_tables","internal_docs.documentid","=","remarks_tables.documentid")
+                    //                     ->join("the_documents","internal_docs.documentid","=","the_documents.documentid")
+                    //                     ->join("users","internal_docs.from","=","users.id")
+                    //                     ->where(["the_documents.docmgt" => "internal",
+                    //                             "internal_docs.status" => 7,
+                    //                             "foot_prints.touserid" => Auth::id()])
+                    //                     ->orderByDesc("remarkstableid")
+                    //                     ->get();
+                }
+                break;
+            case "external":
+                $documentidname = "documentid";
+                if ($acct_type == 1) {
+                    $data   = $this->getExternal(["the_documents.docmgt" => "external"]);
+                } else {
+                    $data   = [];
+                    // $data         = DB::table("external_docs")
+                    //                     ->select("external_docs.status","external_docs.sendersname","the_documents.*","remarks_tables.actionneeded",
+                    //                             "remarks_tables.remarks","remarks_tables.created_at as retdate")
+                    //                     ->join("foot_prints","external_docs.document_id","=","foot_prints.documentid")
+                    //                     ->join("remarks_tables","external_docs.document_id","=","remarks_tables.documentid")
+                    //                     ->join("the_documents","external_docs.document_id","=","the_documents.documentid")
+                    //                     ->where(["the_documents.docmgt" => "external",
+                    //                             "external_docs.status" => 7,
+                    //                             "foot_prints.touserid" => Auth::id()])
+                    //                     ->get();
+                }
+                break;
+        }
+
+        return view("widgets.documentslist")->with(["data"           => $data,
+                                                    "doctype"        => $req->input("action"),
+                                                    "documentidname" => $documentidname,
+                                                    "requesttype"    => $req->input("action")])->render();
+    }
+
+    function donedocs(Request $req) {
+        $action         = $req->input("action");
+
+        $acct_type     = PpersonnelTable::where(["userid"=>Auth::id()])->get();
+        $levelofaccess = $acct_type[0]->levelofaccess;
+        $acct_type     = $acct_type[0]->offtype->offtype;
+
+
+        $data           = [];
+        $documentidname = null;
+        switch($action) {
+            case "internal":
+                $documentidname = "documentid";
+                if ($acct_type == 1) {
+                    $data   = $this->getinternal(["internal_docs.status" => 7,
+                                                  "the_documents.docmgt" => "internal"]);
+                } else {
+                    $data         = DB::table("internal_docs")
+                                        ->select("internal_docs.status","the_documents.*","remarks_tables.actionneeded",
+                                                "remarks_tables.remarks","remarks_tables.created_at as retdate","users.name")
+                                        ->join("foot_prints","internal_docs.documentid","=","foot_prints.documentid")
+                                        ->join("remarks_tables","internal_docs.documentid","=","remarks_tables.documentid")
+                                        ->join("the_documents","internal_docs.documentid","=","the_documents.documentid")
+                                        ->join("users","internal_docs.from","=","users.id")
+                                        ->where(["the_documents.docmgt" => "internal",
+                                                "internal_docs.status" => 7,
+                                                "foot_prints.touserid" => Auth::id()])
+                                        ->orderByDesc("remarkstableid")
+                                        ->get();
+                }
+                break;
+            case "external":
+                $documentidname = "document_id";
+                if ($acct_type == 1) {
+                    $data   = $this->getExternal(["the_documents.docmgt" => "external",
+                                                        "external_docs.status" => 7]);
+                } else {
+                    $data         = DB::table("external_docs")
+                                        ->select("external_docs.status","external_docs.sendersname","the_documents.*","remarks_tables.actionneeded",
+                                                "remarks_tables.remarks","remarks_tables.created_at as retdate")
+                                        ->join("foot_prints","external_docs.document_id","=","foot_prints.documentid")
+                                        ->join("remarks_tables","external_docs.document_id","=","remarks_tables.documentid")
+                                        ->join("the_documents","external_docs.document_id","=","the_documents.documentid")
+                                        ->where(["the_documents.docmgt" => "external",
+                                                "external_docs.status" => 7,
+                                                "foot_prints.touserid" => Auth::id()])
+                                        ->get();
+                }
+                break;
+        }
+
+        return view("widgets.documentslist")->with(["data"           => $data,
+                                                    "doctype"        => $req->input("action"),
+                                                    "documentidname" => $documentidname,
+                                                    "requesttype"    => $req->input("action")])->render();
     }
 
     function provideupdate(Request $req) {
@@ -625,7 +784,12 @@ class TheDocumentController extends Controller
         $complete           = $req->input("complete");
 
         $latest             = RemarksTable::where("documentid",$docid)->latest("remarkstableid")->get();
-        $name               = User::where("id",Auth::id())->get("name")[0]->name;
+        $userdets           = User::where("id",Auth::id())->get(["name","email"]);
+        $name               = $userdets[0]->name;
+        $email              = $userdets[0]->email;
+
+        $documentdets       = TheDocument::where("documentid",$docid)->get(["docmgt","subject","barcodenumber"]);
+        $docmgt             = $documentdets[0]->docmgt;
 
         $rt                 = new RemarksTable();
         $rt->documentid     = $docid;
@@ -636,16 +800,81 @@ class TheDocumentController extends Controller
         $rt->actionneeded   = "";
         $rt->action         = "{$name} provided an update";
         $rt->remarks        = $update;
-        $rt->status         = ($complete == true)?0:1;
+        $rt->status         = 0; // ($complete == true)?7:1;
+
+        $approved    = false;
+
+        if ($complete == true || $complete == "true" || $complete == 1 || $complete == "1") {
+            // $save        = RemarksTable::where(["documentid" => $docid, "remarkerid" => Auth::id()])->update(["status" => 7]);
+            $rt->status     = 7;
+
+            $checkstatus = RemarksTable::where(["documentid" => $docid])->get("status");
+
+            foreach($checkstatus as $cs) {
+                if ($cs->status == 7) {
+                    $approved = true;
+                } else {
+                    $approved = false;
+                    break;
+                }
+            }
+        }
+
         $save               = $rt->save();
 
         if ($save) {
             $fp_update      = ["status" => 0];
             $fp_where       = ["documentid"=>$docid, "touserid" => Auth::id()];
-            
+
+            /*
+                use App\Models\InternalDocs;
+                use App\Models\ExternalDocs;
+                use App\Models\OutgoingDocs;
+            */
+            if ($approved) {
+                switch($docmgt) {
+                    case "internal":
+                        $save = InternalDocs::where("documentid",$docid)->update(["status" => 7]);
+                        break;
+                    case "external":
+                        $save = ExternalDocs::where("document_id", $docid)->update(["status" => 7]);
+                        break;
+                    case "outgoing":
+                        $save = OutgoingDocs::where("document_id", $docid)->update(["status" => 7]);
+                        break;
+                }
+            }
+
             // get footprint details
                 $save                 = FootPrint::where($fp_where)->update($fp_update);
             // end 
+
+            // send email
+                        // $email_rec  = [
+                        //         "name"   => $name,
+                        //         "title"  => $documentdets[0]->subject,
+                        //         "bid"    => $documentdets[0]->barcodenumber,
+                        //         "url"    => url("dashboard"),
+                        //         "update" => $update
+                        //     ];
+
+                        // $email_dets = [
+                        //         "toemail"      => $email,
+                        //         "about"        => $update,
+                        //         "title"        => $documentdets[0]->subject,
+                        //         "barcode"      => $documentdets[0]->barcodenumber,
+                        //         "url"          => url("dashboard"),
+                        //         "name"         => $name,
+                        //         "body"         => view("templates.update")->with(["data"=>$email_rec])->render()
+                        //     ];
+
+                        //     Mail::raw('This email confirms that everything was set up correctly!', function ($message) use ($email_dets) { 
+                        //         $message->to($email_dets['toemail'])
+                        //                 ->from("no-reply@minda.gov.ph",$email_dets['name'])
+                        //                 ->subject($email_dets['name']." has provide an update to ".$email_dets['title'])
+                        //                 ->html($email_dets['body']);
+                        //     }); 
+            // end sending email
         }
 
         return response()->json($save);

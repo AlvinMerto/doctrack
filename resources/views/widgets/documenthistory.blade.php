@@ -29,21 +29,26 @@
                     
                         // start row
                         if ($s_count == 1) {
-                            echo "<div style='background: #ccf9c7;border-radius: 10px;margin-top: 8px;box-shadow: 0px 2px 4px #e4e3e3;'> <p style='padding: 13px 0px 0px 13px; font-weight: bold;'> Latest Update: </p>";
+                            echo "<div class='latest-div'> <p style='padding: 13px 0px 0px 13px; font-weight: bold;'> Latest Update: </p>";
                         }
 
                         echo "<div class='row py-3 pl-3'>
-                                <div class='col-md-3'>
-                                    <p class='strong_this'>". date("h:i A", strtotime($hd->created_at)) ."</p>
+                                <div class='col-md-1'>
+                                    <i class='la la-comments bubbleicon'></i>
                                 </div>";
-
+                            // <p class='strong_this'>".  ."</p>
                             // start col-md-9
-                            echo "<div class='col-md-9'>";
+                            // <p class='strong_this'> Action: </p>
+                            echo "<div class='col-md-11'>";
+                                echo "<strong class='strong_this'>".date("h:i A", strtotime($hd->created_at))." </strong>";
+
+                                ?>
+                                    ·  {{ \Carbon\Carbon::parse($hd->created_at)->diffForHumans() }}
+                                <?php
 
                                 if (strlen($hd->action)>0) {
                                     echo "<div class='mb-3'> 
-                                            <p class='strong_this'> Action: </p>
-                                            <p> {$hd->action} </p>
+                                            <p> {$hd->action}</p> 
                                         </div>";
                                 }
 
@@ -74,17 +79,19 @@
                     echo "</div>";
                 } else {
                     // start row
-                        echo "<div class='row py-3 pl-3'>
-                                <div class='col-md-3'>
-                                    <p class='strong_this'> ". date("h:i A", strtotime($hd->created_at)) ."</p>
+                        echo "<div class='row py-3 pl-3 underline-it'>
+                                <div class='col-md-1'>
+                                    <i class='la la-comments bubbleicon'></i>
                                 </div>";
 
                             // start col-md-9
-                            echo "<div class='col-md-9'>";
-
+                            echo "<div class='col-md-11'>";
+                                echo "<strong class='strong_this'> ". date("h:i A", strtotime($hd->created_at)) ."</strong>";
+                                ?>
+                                   · {{ \Carbon\Carbon::parse($hd->created_at)->diffForHumans() }}
+                                <?php
                                 if (strlen($hd->action)>0) {
-                                    echo "<div class='mb-3'> 
-                                            <p class='strong_this'> Action: </p>
+                                    echo "<div class='mb-3'>
                                             <p> {$hd->action} </p>
                                         </div>";
                                 }

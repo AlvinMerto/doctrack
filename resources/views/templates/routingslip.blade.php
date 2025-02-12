@@ -1,28 +1,10 @@
-<div>
-
-  <div class="mt-0 border-gray-100">
-      <div id="the_file_canvass">
-          <?php if (count($files) > 0) { ?>
-            <div class="row"> 
-              <input type='hidden' value='<?Php echo json_encode($files); ?>' id='thefiles'/>
-            </div>
-              <!-- <embed src='<?php // echo asset("storage/public/attachments/".$f->thefile); ?>'  width="100%" height="1000px" /> -->
-              <embed data-asset="<?php echo asset("storage"); ?>" src='' id='theembed_file' width="100%" height="750px"/>
-          <?php } ?>
-      </div>
-
-      <div id="the_document_details" style='width:100%;'>
+    <div id="the_document_details" style='width:100%;'>
         <div class='row'>
-          <div class="col-md-9" id="printablearea">
-            <table class='table headertbl'>
+          <div class="col-md-9">
+            <table class='table'>
               <tbody>
-                <tr class='thelogo'>
-                  <td colspan='4'> 
-                    <img src="{{asset('minda_logo_1.png')}}"/> 
-                  </td>
-                </tr>
                 <tr> 
-                  <td class='thetitle' colspan='4'> <h3> ROUTING SLIP </h3> </td>
+                  <td> <h3> ROUTING SLIP </h3> </td>
                 </tr>
                 <tr> 
                   <th> Control Number: </th>
@@ -30,7 +12,7 @@
                 </tr>
                 <tr> 
                   <th> Date Received: </th>
-                  <td> <?php echo date("F d, Y", strtotime($document[0]->created_at)); ?> @ <?php echo date("h:i A", strtotime($document[0]->created_at)); ?> <small class='humandate'> {{ \Carbon\Carbon::parse(date("F d, Y", strtotime($document[0]->created_at)))->diffForHumans() }} </small> </td>
+                  <td> <?php echo date("F d, Y", strtotime($document[0]->created_at)); ?> @ <?php echo date("h:i A", strtotime($document[0]->created_at)); ?> <small> {{ \Carbon\Carbon::parse(date("F d, Y", strtotime($document[0]->created_at)))->diffForHumans() }} </small> </td>
                 </tr>
                 <tr> 
                   <th> Document Type: </th>
@@ -42,7 +24,7 @@
                 </tr>
               </tbody>
             </table>
-            <table class='table remarkstbl'>
+            <table class='table'>
               <thead>
                 <tr> 
                   <th> DATE </th>
@@ -75,11 +57,7 @@
             </table>
           </div>
           <div class="col-md-3 pt-2">
-            <input type="submit" value="Print" class="btn btn-primary" style="width:100%;" onclick="print_div('printablearea')"/>
+            <input type="submit" value="Print" class="btn btn-primary" style="width:100%;"/>
           </div>
         </div>
       </div> 
-
-  </div>
-
-</div>

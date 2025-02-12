@@ -17,4 +17,12 @@ class RemarksTable extends Model
     function getUser() {
         return $this->hasOne(User::class,"id","remarkerid");
     }
+
+    function getRemarker() {
+        return $this->hasOne(User::class,"id","remarkerid");
+    }
+
+    function getTo() {
+        return $this->hasOne(User::class,"id","toid");
+    }
 }

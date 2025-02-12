@@ -46,11 +46,15 @@ class ExternalDocs extends Model
     }
 
     function get_remarks() {
-        return $this->hasOne(RemarksTable::class,"documentid","document_id");
+        return $this->hasMany(RemarksTable::class,"documentid","document_id");
     }
 
     function get_files() {
         return $this->hasOne(FileController::class,"documentid","documentid");
+    }
+
+    function get_footprint() {
+        return $this->hasMany(FootPrint::class,"documentid","document_id");
     }
 }
 

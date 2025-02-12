@@ -12,11 +12,11 @@
         if (!in_array($d->$documentidname, $in_table)) {
             array_push($in_table,$d->$documentidname);
  ?>                                                                  
-        <tr data-did = '<?php echo $d->$documentidname; ?>' class='item_row'>
-            <!-- <td>
-                <?php // echo $count; ?>
-            </td> -->
-            <td>
+        <tr>
+            <td class='bookmarkthis'>
+                <input type='checkbox' class='bookmarkthis' value='<?php echo $d->$documentidname; ?>'>
+            </td>
+            <td class='item_row' data-did = '<?php echo $d->$documentidname; ?>'>
                 <span class="m-widget11__title">
                     <?php 
                         //if (isset($d->subject)) {
@@ -32,34 +32,34 @@
                     <?php } ?>
                 </span>
             </td>
-            <td>
+            <td class='item_row' data-did = '<?php echo $d->$documentidname; ?>'>
                 <?php if (isset($d->created_at)) { ?>
                     {{ \Carbon\Carbon::parse($d->created_at)->diffForHumans() }}
                 <?php } ?>
             </td>
-            <td>
+            <td class='item_row' data-did = '<?php echo $d->$documentidname; ?>'>
                 <?php echo date("l M. d, Y h:i A", strtotime($d->created_at)); ?>
             </td>
-            <td>
+            <td class='item_row' data-did = '<?php echo $d->$documentidname; ?>'>
                 <span class="m-widget11__title">
                     <?php 
-                        if (isset($d->remarks)) {
-                            echo $d->remarks; 
-                        }
+                        // if (isset($d->remarks)) {
+                        //     echo $d->remarks; 
+                        // }
                     ?>
                     <?php 
-                        if (isset($d->actionneeded)) {
-                            echo $d->actionneeded; 
-                        }
+                        // if (isset($d->actionneeded)) {
+                        //     echo $d->actionneeded; 
+                        // } widget11__sub
                     ?>
                 </span>
-                <span class="m-widget11__sub">
+                <span class="m-widget11__title">
                     <?php if ( isset($d->retdate)) { ?>
                             {{ \Carbon\Carbon::parse($d->retdate)->diffForHumans() }}
                     <?php } ?>
                 </span>
             </td>
-            <td class="m--align-right m--font-brand">
+            <td class="m--align-right m--font-brand item_row" data-did = '<?php echo $d->$documentidname; ?>'>
                 <?php
                     switch($d->priority) {
                         case "confidential":
