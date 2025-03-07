@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use App\Models\TheDivision;
+use App\Models\TheOffice;
+use App\Models\PpersonnelTable;
+
 use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable
@@ -46,5 +50,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    function getdivs() {
+        return $this->hasOne(TheDivision::class,"divisionid","divisionid");
+    }
+
+    // function getUsers() {
+    //     return $this->hasOne(User::class,"id","userid");
+    // }
+
+    function offtype() {
+        return $this->hasOne(TheOffice::class,"officeid","officeid");
+    }
+
+    function getprofile() {
+        return $this->hasone(PpersonnelTable::class,"userid","id");
     }
 }

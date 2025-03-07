@@ -27,6 +27,41 @@
                             <div class="m-portlet__head-caption">
                                 <div class="m-portlet__head-title">
                                     <h3 class="m-portlet__head-text">
+                                        <i class="la la-user"></i> Unmanaged Accounts
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="m-portlet__body pt-0">
+                            <table class='table'>
+                                <thead>
+                                    <th> Name </th>
+                                    <th> Email Address </th>
+                                    <th> <i class="la la-edit"> </i> </th>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($users as $u) { ?>
+                                        <?php if(!isset($u->getprofile->personnelid)) { ?>
+                                            <tr> 
+                                                <td> <?php echo $u->name; ?> </td>
+                                                <td> <?php echo $u->email; ?> </td>
+                                                <td> 
+                                                    <a href='' class='edit' data-uid = '<?php echo $u->id; ?>' data-toggle="modal" data-target="#exampleModal"><small> edit </small> </a>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="m-portlet m-portlet--full-height ">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text">
                                         <i class="la la-user"></i> Manage User
                                     </h3>
                                 </div>

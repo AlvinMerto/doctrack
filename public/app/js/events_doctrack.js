@@ -416,13 +416,15 @@ $(document).on("click",'.edit', function(){
 });
 
 $(document).on("click","#savechanges", function(){    
-    var divisionid = null;
-    var ids        = null;
-    var role       = null;
+    var divisionid = $(document).find("#divisionselect").val();
+    var ids        = $(document).find("#officeselect").val();
+    var role       = $(document).find("#assignedrole").val();
 
     var officeid      = ids.split("_")[0];
     var typeofaccount = ids.split("_")[1];
 
+    // console.log(divisionid+"-"+officeid);
+    // return;
     $.ajax({
         url         : url+"/savemanagement",
         type        : "post",
@@ -436,7 +438,7 @@ $(document).on("click","#savechanges", function(){
 
         },
         success     : function(data) {
-            alert(data);
+            console.log(data);
         }, error    : function() {
             alert("Error managing the user");
         }

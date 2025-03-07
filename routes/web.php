@@ -113,7 +113,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/alldocs',[TheDocumentController::class,"alldocs"])->name("alldocs");
 
         Route::get("/manageuserwidget",[PpersonnelTableController::class,"manageuserwidget"])->name("manageuserwidget");
-        Route::post("/savemanagement", [PpersonnelTable::class,"savemanagement"])->name('savemanagement');
+        Route::post("/savemanagement", [PpersonnelTableController::class,"savemanagement"])->name('savemanagement');
     // end
 });
 

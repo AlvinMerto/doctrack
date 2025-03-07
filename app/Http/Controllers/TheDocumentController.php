@@ -36,6 +36,11 @@ class TheDocumentController extends Controller
         // $acct_type  = $acct_type['typeofaccount'];
         
         $acct_type     = PpersonnelTable::where(["userid"=>Auth::id()])->get();
+
+        if ($acct_type->count() == 0) {
+            die("<h1 style='text-align: center;font-family: arial;margin-top: 30px;'> Your account is being configured. Please wait for the confirmation. </h1>");
+        }
+
         $levelofaccess = $acct_type[0]->levelofaccess;
         $acct_type     = $acct_type[0]->offtype->offtype;
         
